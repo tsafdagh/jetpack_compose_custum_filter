@@ -1,9 +1,7 @@
 package com.biometric.pdfviewer
 
-import android.Manifest
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -24,18 +22,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
-import com.biometric.pdfviewer.fileDownload.components.HomeFileViewComponent
 import com.biometric.pdfviewer.fileDownload.models.CustomFile
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFileFromGallery
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFromCamera
 import com.biometric.pdfviewer.ui.theme.PdfViewerTheme
 import com.biometric.pdfviewer.viewFilterOption.NotificationScreen
+import com.biometric.pdfviewer.viewFilterOption.NotificationsViewModel
 
 
 //Difference beetwen tow date
@@ -45,10 +42,13 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             PdfViewerTheme {
+                val viewModel:NotificationsViewModel = viewModel()
 
-                NotificationScreen()
+
+                NotificationScreen(viewModel)
                 // A surface container using the 'background' color from the theme
 
            /*     Surface(

@@ -5,7 +5,8 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -13,12 +14,18 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.biometric.pdfviewer.R
 import com.biometric.pdfviewer.fileDownload.models.Notice
 import com.biometric.pdfviewer.fileDownload.utils.MyDateUtils.convertStringToLocalDateTime
+import com.biometric.pdfviewer.viewFilterOption.component.FilterCriteriaAlertDialog
 import com.biometric.pdfviewer.viewFilterOption.component.NotificationRow
 import kotlinx.coroutines.flow.collect
 import java.time.LocalDateTime
@@ -27,19 +34,39 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun NotificationScreen(
-) {
+fun NotificationScreen(viewModel: NotificationsViewModel) {
+
+    var showCustomDialogWithResult by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "Notification",
-                        style = MaterialTheme.typography.h3
-                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Text(
+                            text = "Notification",
+                            style = MaterialTheme.typography.body1
+                        )
+                        Icon(
+                            painterResource(id = R.drawable.ic_baseline_filter_list_24),
+                            contentDescription = "Favorite",
+                            modifier = Modifier
+                                .size(ButtonDefaults.IconSize)
+                                .clickable {
+                                    showCustomDialogWithResult = true
+                                },
+                        )
+                    }
+
                 },
                 navigationIcon = {
-                    IconButton(onClick = {  }) {
+                    IconButton(onClick = { }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -51,11 +78,14 @@ fun NotificationScreen(
         }
 
     ) {
+
+        val dataList by viewModel.listLiveData.observeAsState(listOf())
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(1.5.dp),
-            state =rememberLazyListState()
+            state = rememberLazyListState()
         ) {
-            itemsIndexed(items = provideData()) { index, item ->
+            itemsIndexed(items = dataList) { index, item ->
 
                 NotificationRow(
                     notice = item,
@@ -63,52 +93,35 @@ fun NotificationScreen(
                     }
                 )
             }
-        }
-    }
-}
 
-@RequiresApi(Build.VERSION_CODES.O)
-fun provideData(): List<Notice> {
-    return listOf(
-        Notice(
-            id = "506ab06a-0c71-4ca9-aa4e-f68240118e02",
-            title = "Requirement Approved",
-            message = "Your submission for Review Sample has been approved.",
-            sentAt = convertStringToLocalDateTime("2022-08-11T15:55:46"),
-            isStarred = false,
-            readAt = null
-        ),
-        Notice(
-            id = "3ca3c17f-d660-4b22-ae75-3d8b337b63d9",
-            title = "Requirement Approved",
-            message = "Your submission for Review Sample has been approved.",
-            sentAt = convertStringToLocalDateTime("2022-08-11T15:52:26"),
-            isStarred = false,
-            readAt = null
-        ),
-        Notice(
-            id = "506ab06a-0c71-4ca9-aa4e-f68240118e02",
-            title = "Requirement Approved",
-            message = "Your submission for Review Sample has been approved.",
-            sentAt = convertStringToLocalDateTime("2022-08-11T13:34:03"),
-            isStarred = false,
-            readAt = null
-        ),
-        Notice(
-            id = "506ab06a-0c71-4ca9-aa4e-f68240118e02",
-            title = "Requirement Approved",
-            message = "Your submission for Review Sample has been approved.",
-            sentAt = convertStringToLocalDateTime("2022-08-11T15:55:46"),
-            isStarred = false,
-            readAt = null
-        ),
-        Notice(
-            id = "506ab06a-0c71-4ca9-aa4e-f68240118e02",
-            title = "Requirement Approved",
-            message = "Your submission for Review Sample has been approved.",
-            sentAt = convertStringToLocalDateTime("2022-08-11T15:55:46"),
-            isStarred = false,
-            readAt = null
-        )
-    )
+
+        }
+
+        val context = LocalContext.current
+
+        if (showCustomDialogWithResult) {
+            FilterCriteriaAlertDialog(
+                onDismiss = {
+                    showCustomDialogWithResult = !showCustomDialogWithResult
+                    Toast.makeText(context, "Dialog dismissed!", Toast.LENGTH_SHORT)
+                        .show()
+                },
+                onNegativeClick = {
+                    showCustomDialogWithResult = !showCustomDialogWithResult
+                    Toast.makeText(context, "Negative Button Clicked!", Toast.LENGTH_SHORT)
+                        .show()
+
+                },
+                onApplyClicked = { filterCriterion ->
+                    showCustomDialogWithResult = !showCustomDialogWithResult
+                    Toast.makeText(context, "Selected color: $filterCriterion", Toast.LENGTH_SHORT).show()
+                    viewModel.filterData(filterCriterion)
+                }
+            )
+        }
+
+        LaunchedEffect(key1 = "Key1", block = {
+            viewModel.provideData()
+        })
+    }
 }

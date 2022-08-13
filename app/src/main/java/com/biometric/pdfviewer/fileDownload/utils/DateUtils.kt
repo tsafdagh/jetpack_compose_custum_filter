@@ -3,6 +3,9 @@ package com.biometric.pdfviewer.fileDownload.utils
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.text.DateFormat
+import java.text.DateFormat.getDateInstance
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -12,6 +15,10 @@ import java.util.concurrent.TimeUnit
 
 object MyDateUtils {
 
+    fun Date.convertDateToSpecificStringFormat(format: String = "dd MMM yyyy kk:mm"): String {
+        val dateFormat = SimpleDateFormat(format, Locale.getDefault())
+        return dateFormat.format(this)
+    }
 
     fun Date.timeAgo(): String {
         val diff: Long = Date().time - this.time
@@ -103,5 +110,11 @@ object MyDateUtils {
         val now = ZonedDateTime.now(ZoneId.of("UTC"))
         val cal = GregorianCalendar.from(now)
         return cal.time
+    }
+
+    fun localToGMT(date: Date): Date? {
+        val sdf = getDateInstance()
+        sdf.timeZone = TimeZone.getTimeZone("UTC")
+        return getDateInstance().parse(sdf.format(date))
     }
 }

@@ -1,10 +1,12 @@
 package com.biometric.pdfviewer.fileDownload.models
 
+import java.util.*
+
 
 data class Notice(
 
 
-    val id: String,
+    val id: UUID,
 
     val title: kotlin.String,
 
