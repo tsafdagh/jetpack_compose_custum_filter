@@ -1,7 +1,6 @@
 package com.biometric.pdfviewer.viewFilterOption
 
 import android.os.Build
-import android.text.format.DateUtils
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,20 +19,45 @@ class NotificationsViewModel() : ViewModel() {
         val originalList = listLiveData.value
 
 
+        var listResult = mutableListOf<Notice>()
+
+        listResult = originalList?.filter {
+            filterMethod(it, filterCriterion)
+        }?.toMutableList() ?: mutableListOf()
+
+
+        listLiveData.postValue(listResult)
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun filterMethod(notice: Notice, filterCriterion: Filteriteria): Boolean {
+
         val criteriaStartAt = filterCriterion.startAt?.let { it1 -> MyDateUtils.localToGMT(it1) }
         val criteriaEndDate = filterCriterion.endDate?.let { it1 -> MyDateUtils.localToGMT(it1) }
 
+        val utcSentAt = notice.sentAt?.let { it1 -> MyDateUtils.fromLdt(it1) }
 
-        if (criteriaStartAt != null && criteriaEndDate != null) {
-            originalList?.filter {
-                val utcSentAt = it.sentAt?.let { it1 -> MyDateUtils.fromLdt(it1) }
-               val condition= (((utcSentAt ?: Date()) >= criteriaStartAt) && criteriaEndDate <= (utcSentAt ?: Date()))
-                condition
-            }
+        val startAtCondition = if (criteriaStartAt != null) {
+            ((utcSentAt ?: Date()) >= criteriaStartAt)
+        } else {
+            true
         }
 
-        listLiveData.postValue(originalList)
+        val endAtCondition = if (criteriaEndDate != null) {
 
+            (criteriaEndDate <= (utcSentAt
+                ?: Date()))
+        } else {
+            true
+        }
+
+        if (criteriaStartAt != null && criteriaEndDate != null) {
+            (((utcSentAt ?: Date()) >= criteriaStartAt) && criteriaEndDate <= (utcSentAt
+                ?: Date()))
+        }
+
+        return startAtCondition && endAtCondition
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
