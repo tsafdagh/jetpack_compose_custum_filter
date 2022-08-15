@@ -38,6 +38,8 @@ fun NotificationScreen(viewModel: NotificationsViewModel) {
 
     var showCustomDialogWithResult by remember { mutableStateOf(false) }
 
+    var isFilterCriteriaApply by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,8 +55,11 @@ fun NotificationScreen(viewModel: NotificationsViewModel) {
                             text = "Notification",
                             style = MaterialTheme.typography.body1
                         )
+
                         Icon(
-                            painterResource(id = R.drawable.ic_baseline_filter_list_24),
+                            if (isFilterCriteriaApply) painterResource(id = R.drawable.ic_baseline_filter_alt_24) else painterResource(
+                                id = R.drawable.ic_baseline_filter_list_24
+                            ),
                             contentDescription = "Favorite",
                             modifier = Modifier
                                 .size(ButtonDefaults.IconSize)
@@ -114,8 +119,14 @@ fun NotificationScreen(viewModel: NotificationsViewModel) {
                 },
                 onApplyClicked = { filterCriterion ->
                     showCustomDialogWithResult = !showCustomDialogWithResult
-                    Toast.makeText(context, "Selected color: $filterCriterion", Toast.LENGTH_SHORT).show()
+
+                    isFilterCriteriaApply = viewModel.checkifCriteriaEnabled(filterCriterion)
                     viewModel.filterData(filterCriterion)
+                },
+                onClearClicked = {
+                    viewModel.clearFilter()
+                    isFilterCriteriaApply =false
+                    showCustomDialogWithResult = !showCustomDialogWithResult
                 }
             )
         }

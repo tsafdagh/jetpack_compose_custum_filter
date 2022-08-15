@@ -31,6 +31,7 @@ import java.util.*
 fun FilterCriteriaAlertDialog(
     onDismiss: () -> Unit,
     onNegativeClick: () -> Unit,
+    onClearClicked: () -> Unit,
     onApplyClicked: (Filteriteria) -> Unit
 ) {
 
@@ -111,7 +112,7 @@ fun FilterCriteriaAlertDialog(
                             endDate = null
                             onlyStarred = false
                             viewReadItm = false
-                            selectionCriteria.clear()
+                            onClearClicked()
                         },
                         text = "Clear",
                         style = TextStyle(color = Color.Black)
@@ -290,6 +291,7 @@ fun MyDialogUIPreview() {
     FilterCriteriaAlertDialog(
         onDismiss = { /*TODO*/ },
         onNegativeClick = { /*TODO*/ },
-        onApplyClicked = {}
+        onApplyClicked = {},
+        onClearClicked = {}
     )
 }

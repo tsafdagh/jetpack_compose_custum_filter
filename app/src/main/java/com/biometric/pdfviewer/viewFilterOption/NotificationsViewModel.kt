@@ -31,54 +31,11 @@ class NotificationsViewModel() : ViewModel() {
 
     }
 
-/*    fun clearFilter(){
+    fun clearFilter(){
         if (originalList.isNotEmpty()){
             listLiveData.postValue(originalList)
         }
-    }*/
-
-/*
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun filterList(originalList:List<Notice>, filterCriterion:Filteriteria):List<Notice>{
-
-        val filteredList = mutableListOf<Notice>()
-
-        val criteriaStartAt = filterCriterion.startAt?.let { it1 -> MyDateUtils.localToGMT(it1) }
-        val criteriaEndDate = filterCriterion.endDate?.let { it1 -> MyDateUtils.localToGMT(it1) }
-
-        originalList.forEach { noticeTemps->
-
-            var firstCriteriaValidate = false
-            var secondriteriaValidate = false
-
-            if (criteriaStartAt != null){
-                val utcSentAt = noticeTemps.sentAt?.let { it1 -> MyDateUtils.fromLdt(it1) }
-
-                if((utcSentAt ?: Date()) >= criteriaStartAt){
-                    filteredList.add(noticeTemps)
-                }
-            }
-
-            if(criteriaEndDate != null){
-                val utcSentAt = noticeTemps.sentAt?.let { it1 -> MyDateUtils.fromLdt(it1) }
-
-                if(criteriaEndDate <= (utcSentAt ?: Date())){
-                    filteredList.add(noticeTemps)
-                }
-            }
-
-            if(filterCriterion.onlyStarredItem){
-                if(noticeTemps.isStarred){
-
-                }
-            }
-
-        }
-
-        return filteredList
     }
-*/
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun filterMethod(notice: Notice, filterCriterion: Filteriteria): Boolean {
@@ -204,6 +161,11 @@ class NotificationsViewModel() : ViewModel() {
         )
         listLiveData.postValue(list)
 
+    }
+
+    fun checkifCriteriaEnabled(filterCriterion: Filteriteria): Boolean {
+
+        return (filterCriterion.viewReadItems || filterCriterion.onlyStarredItem || filterCriterion.startAt != null || filterCriterion.endDate != null)
     }
 
 }
