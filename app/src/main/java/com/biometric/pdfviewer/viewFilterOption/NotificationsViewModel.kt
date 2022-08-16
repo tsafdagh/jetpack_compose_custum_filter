@@ -65,29 +65,6 @@ class NotificationsViewModel() : ViewModel() {
             startAtCondition && endAtCondition && (notice.readAt != null)
         }else{true}
 
-/*        val generalCond = if (criteriaEndDate != null) {
-            if (filterCriterion.onlyStarredItem) {
-                if (filterCriterion.viewReadItems) {
-                    (criteriaEndDate <= (utcSentAt
-                        ?: Date())) && notice.isStarred && (notice.readAt != null)
-                } else {
-                    (criteriaEndDate <= (utcSentAt ?: Date())) && notice.isStarred
-                }
-            } else {
-                (criteriaEndDate <= (utcSentAt
-                    ?: Date()))
-            }
-        } else if (filterCriterion.onlyStarredItem) {
-                if (filterCriterion.viewReadItems) {
-                    notice.isStarred && (notice.readAt != null)
-                } else {
-                    notice.isStarred
-                }
-            } else {
-                true
-            }*/
-
-
         return startAtCondition && endAtCondition && onlyStarredItemCondition && viewReadItem
     }
 
