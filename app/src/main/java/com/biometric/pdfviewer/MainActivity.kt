@@ -34,6 +34,7 @@ import com.biometric.pdfviewer.fileDownload.models.ImageFileFileFromGallery
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFromCamera
 import com.biometric.pdfviewer.ui.theme.PdfViewerTheme
 import com.biometric.pdfviewer.viewFilterOption.components2.CheckboxBlocComponent
+import com.biometric.pdfviewer.viewFilterOption.components2.DropDownSection
 import com.biometric.pdfviewer.viewFilterOption.components2.RadioGroupSection
 
 
@@ -60,7 +61,6 @@ class MainActivity : ComponentActivity() {
     )
 
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,21 +69,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             PdfViewerTheme {
 
-               /* CheckboxBlocComponent(
-                    choiceObject = chexboxChoiceModel,
-                    onItemsSelected = { selectedValue ->
-                        println("Selected: $selectedValue")
-                        checkBoxSelectedValues.add(selectedValue)
-                        println("*******Selection: $checkBoxSelectedValues")
-                    },
-                    onItemsUnSelected = { unSelectedValue ->
-                        println("unSelectedValue: $unSelectedValue")
+                /* CheckboxBlocComponent(
+                     choiceObject = chexboxChoiceModel,
+                     onItemsSelected = { selectedValue ->
+                         println("Selected: $selectedValue")
+                         checkBoxSelectedValues.add(selectedValue)
+                         println("*******Selection: $checkBoxSelectedValues")
+                     },
+                     onItemsUnSelected = { unSelectedValue ->
+                         println("unSelectedValue: $unSelectedValue")
 
-                        checkBoxSelectedValues.remove(unSelectedValue)
-                        println("*******Selection: $checkBoxSelectedValues")
-                    }
-                )
-                */
+                         checkBoxSelectedValues.remove(unSelectedValue)
+                         println("*******Selection: $checkBoxSelectedValues")
+                     }
+                 )
+                 */
 
                 val radioGroupChoiceModel = ChoiceModel(
                     name = "Question0",
@@ -102,6 +102,8 @@ class MainActivity : ComponentActivity() {
                     isRequired = true,
                 )
 
+
+                /*
                 var selectedRadioItem by remember {
                     mutableStateOf("")
                 }
@@ -109,8 +111,21 @@ class MainActivity : ComponentActivity() {
                 RadioGroupSection(radioGroupChoiceModel, onOptionItemSelected = {
                     selectedRadioItem = it
                     println("*******Selection: $selectedRadioItem")
-
                 })
+
+*/
+
+
+                var selectedElement by remember { mutableStateOf("") }
+
+                DropDownSection(
+                    choiceObject = radioGroupChoiceModel, onElementSelected = {
+                        selectedElement = it
+                        println("*******Selection: $selectedElement")
+
+                    })
+
+
                 //val viewModel:NotificationsViewModel = viewModel()
                 //NotificationScreen(viewModel)
             }
