@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -25,54 +27,61 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
+import com.biometric.pdfviewer.entities.ChoiceModel
 import com.biometric.pdfviewer.fileDownload.models.CustomFile
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFileFromGallery
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFromCamera
 import com.biometric.pdfviewer.ui.theme.PdfViewerTheme
-import com.biometric.pdfviewer.viewFilterOption.NotificationScreen
-import com.biometric.pdfviewer.viewFilterOption.NotificationsViewModel
+import com.biometric.pdfviewer.viewFilterOption.components2.CheckboxBlocComponent
 
 
 //Difference beetwen tow date
 //https://stackoverflow.com/questions/10690370/how-do-i-get-difference-between-two-dates-in-android-tried-every-thing-and-pos
 
 class MainActivity : ComponentActivity() {
+
+    val choiceModel = ChoiceModel(
+        name = "Question0",
+        type = "Checbox",
+        title = "Question9 - checbox",
+        choices = listOf(
+            "First element",
+            "Second Element",
+            "Third element",
+            "Four element",
+            " Five element",
+            "Six element"
+        ),
+        hasNone = true,
+        hasOther = true,
+        isRequired = true,
+    )
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val checkBoxSelectedValues = mutableListOf<String>()
         setContent {
             PdfViewerTheme {
-                val viewModel:NotificationsViewModel = viewModel()
 
+                CheckboxBlocComponent(
+                    choiceObject = choiceModel,
+                    onItemsSelected = { selectedValue ->
+                        println("Selected: $selectedValue")
+                        checkBoxSelectedValues.add(selectedValue)
+                        println("*******Selection: $checkBoxSelectedValues")
+                    },
+                    onItemsUnSelected = { unSelectedValue ->
+                        println("unSelectedValue: $unSelectedValue")
 
-                NotificationScreen(viewModel)
-                // A surface container using the 'background' color from the theme
-
-           /*     Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-
-                    sectAndShowImageMainComponent()
-
-                    val permissionLauncher = rememberLauncherForActivityResult(
-                        ActivityResultContracts.RequestPermission()
-                    ) { isGranted: Boolean ->
-                        if (isGranted) {
-                            // Permission Accepted
-                        } else {
-                            // Permission Denied
-                        }
+                        checkBoxSelectedValues.remove(unSelectedValue)
+                        println("*******Selection: $checkBoxSelectedValues")
                     }
-
-                    SideEffect {
-                        permissionLauncher.launch(Manifest.permission.CAMERA)
-                    }
-                }
-
-            */
+                )
+                //val viewModel:NotificationsViewModel = viewModel()
+                //NotificationScreen(viewModel)
             }
         }
     }
