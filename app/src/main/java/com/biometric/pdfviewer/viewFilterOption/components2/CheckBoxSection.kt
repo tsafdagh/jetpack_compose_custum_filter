@@ -175,7 +175,8 @@ fun CheckboxBlocComponent(
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         unfocusedLabelColor = MaterialTheme.colors.primary,
                         textColor = Color.White
-                    )
+                    ),
+                    label = {Text("Describe", color = Color.White)}
                 )
             }
         }

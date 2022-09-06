@@ -34,6 +34,7 @@ import com.biometric.pdfviewer.fileDownload.models.ImageFileFileFromGallery
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFromCamera
 import com.biometric.pdfviewer.ui.theme.PdfViewerTheme
 import com.biometric.pdfviewer.viewFilterOption.components2.CheckboxBlocComponent
+import com.biometric.pdfviewer.viewFilterOption.components2.RadioGroupSection
 
 
 //Difference beetwen tow date
@@ -41,7 +42,7 @@ import com.biometric.pdfviewer.viewFilterOption.components2.CheckboxBlocComponen
 
 class MainActivity : ComponentActivity() {
 
-    val choiceModel = ChoiceModel(
+    val chexboxChoiceModel = ChoiceModel(
         name = "Question0",
         type = "Checbox",
         title = "Question9 - checbox",
@@ -58,6 +59,8 @@ class MainActivity : ComponentActivity() {
         isRequired = true,
     )
 
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +69,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             PdfViewerTheme {
 
-                CheckboxBlocComponent(
-                    choiceObject = choiceModel,
+               /* CheckboxBlocComponent(
+                    choiceObject = chexboxChoiceModel,
                     onItemsSelected = { selectedValue ->
                         println("Selected: $selectedValue")
                         checkBoxSelectedValues.add(selectedValue)
@@ -80,6 +83,34 @@ class MainActivity : ComponentActivity() {
                         println("*******Selection: $checkBoxSelectedValues")
                     }
                 )
+                */
+
+                val radioGroupChoiceModel = ChoiceModel(
+                    name = "Question0",
+                    type = "Checbox",
+                    title = "Question9 - checbox",
+                    choices = listOf(
+                        "First element",
+                        "Second Element",
+                        "Third element",
+                        "Four element",
+                        " Five element",
+                        "Six element"
+                    ),
+                    hasNone = true,
+                    hasOther = true,
+                    isRequired = true,
+                )
+
+                var selectedRadioItem by remember {
+                    mutableStateOf("")
+                }
+
+                RadioGroupSection(radioGroupChoiceModel, onOptionItemSelected = {
+                    selectedRadioItem = it
+                    println("*******Selection: $selectedRadioItem")
+
+                })
                 //val viewModel:NotificationsViewModel = viewModel()
                 //NotificationScreen(viewModel)
             }
