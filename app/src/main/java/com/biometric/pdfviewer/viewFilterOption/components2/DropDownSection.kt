@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,6 @@ fun DropDownSection(
     if (choiceObject.hasOther) {
         suggestions.add(OTHER)
     }
-
     Column(
         modifier = modifier
             .background(color = Color.DarkGray)

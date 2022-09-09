@@ -155,7 +155,7 @@ class NotificationsViewModel() : ViewModel() {
         val listOfElement = mutableListOf<TwoField>()
 
         (0 ..5).forEach {
-          listOfElement.add(TwoField(it, "$it"))
+          listOfElement.add(TwoField(it, "Item$it"))
         }
 
         listOfElementObserver.value = listOfElement

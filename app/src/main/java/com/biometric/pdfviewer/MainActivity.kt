@@ -35,10 +35,7 @@ import com.biometric.pdfviewer.fileDownload.models.ImageFileFileFromGallery
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFromCamera
 import com.biometric.pdfviewer.ui.theme.PdfViewerTheme
 import com.biometric.pdfviewer.viewFilterOption.NotificationsViewModel
-import com.biometric.pdfviewer.viewFilterOption.components2.CheckboxBlocComponent
-import com.biometric.pdfviewer.viewFilterOption.components2.DropDownSection
-import com.biometric.pdfviewer.viewFilterOption.components2.RadioGroupSection
-import com.biometric.pdfviewer.viewFilterOption.components2.ShowRanking
+import com.biometric.pdfviewer.viewFilterOption.components2.*
 
 
 //Difference beetwen tow date
@@ -131,10 +128,8 @@ class MainActivity : ComponentActivity() {
 
                */
 
-
-                ShowRanking(viewModel = viewModel)
-
-
+                //ShowRanking(viewModel = viewModel)
+                ReorderableList()
             }
 
             LaunchedEffect(key1 = "KeyOO", block = {
