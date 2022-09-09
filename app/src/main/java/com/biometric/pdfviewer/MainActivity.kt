@@ -27,15 +27,18 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.biometric.pdfviewer.entities.ChoiceModel
 import com.biometric.pdfviewer.fileDownload.models.CustomFile
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFileFromGallery
 import com.biometric.pdfviewer.fileDownload.models.ImageFileFromCamera
 import com.biometric.pdfviewer.ui.theme.PdfViewerTheme
+import com.biometric.pdfviewer.viewFilterOption.NotificationsViewModel
 import com.biometric.pdfviewer.viewFilterOption.components2.CheckboxBlocComponent
 import com.biometric.pdfviewer.viewFilterOption.components2.DropDownSection
 import com.biometric.pdfviewer.viewFilterOption.components2.RadioGroupSection
+import com.biometric.pdfviewer.viewFilterOption.components2.ShowRanking
 
 
 //Difference beetwen tow date
@@ -67,6 +70,8 @@ class MainActivity : ComponentActivity() {
 
         val checkBoxSelectedValues = mutableListOf<String>()
         setContent {
+            val viewModel: NotificationsViewModel = viewModel()
+
             PdfViewerTheme {
 
                 /* CheckboxBlocComponent(
@@ -85,6 +90,7 @@ class MainActivity : ComponentActivity() {
                  )
                  */
 
+                /*
                 val radioGroupChoiceModel = ChoiceModel(
                     name = "Question0",
                     type = "Checbox",
@@ -102,8 +108,6 @@ class MainActivity : ComponentActivity() {
                     isRequired = true,
                 )
 
-
-                /*
                 var selectedRadioItem by remember {
                     mutableStateOf("")
                 }
@@ -116,7 +120,7 @@ class MainActivity : ComponentActivity() {
 */
 
 
-                var selectedElement by remember { mutableStateOf("") }
+              /*  var selectedElement by remember { mutableStateOf("") }
 
                 DropDownSection(
                     choiceObject = radioGroupChoiceModel, onElementSelected = {
@@ -125,11 +129,20 @@ class MainActivity : ComponentActivity() {
 
                     })
 
+               */
 
-                //val viewModel:NotificationsViewModel = viewModel()
-                //NotificationScreen(viewModel)
+
+                ShowRanking(viewModel = viewModel)
+
+
             }
+
+            LaunchedEffect(key1 = "KeyOO", block = {
+                viewModel.BuildItems()
+            })
         }
+
+
     }
 }
 
