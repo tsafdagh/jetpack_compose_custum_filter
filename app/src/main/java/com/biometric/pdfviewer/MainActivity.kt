@@ -65,6 +65,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val choiceData = List(10) { TwoField("$it", it) }.toMutableStateList()
+
         val checkBoxSelectedValues = mutableListOf<String>()
         setContent {
             val viewModel: NotificationsViewModel = viewModel()
@@ -117,24 +119,26 @@ class MainActivity : ComponentActivity() {
 */
 
 
-              /*  var selectedElement by remember { mutableStateOf("") }
+                /*  var selectedElement by remember { mutableStateOf("") }
 
-                DropDownSection(
-                    choiceObject = radioGroupChoiceModel, onElementSelected = {
-                        selectedElement = it
-                        println("*******Selection: $selectedElement")
+                  DropDownSection(
+                      choiceObject = radioGroupChoiceModel, onElementSelected = {
+                          selectedElement = it
+                          println("*******Selection: $selectedElement")
 
-                    })
+                      })
 
-               */
+                 */
 
                 //ShowRanking(viewModel = viewModel)
-                ReorderableList()
-            }
+                //ReorderableList()
 
-            LaunchedEffect(key1 = "KeyOO", block = {
-                viewModel.BuildItems()
-            })
+                RateComponent(choiceData = List(10) { it }.toList(),
+                    choiceObject = chexboxChoiceModel,
+                    onItemSelected = {
+                        println("Item Selected: $it")
+                    })
+            }
         }
 
 

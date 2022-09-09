@@ -2,12 +2,14 @@ package com.biometric.pdfviewer.viewFilterOption
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.biometric.pdfviewer.entities.ChoiceModel
 import com.biometric.pdfviewer.fileDownload.models.Filteriteria
 import com.biometric.pdfviewer.fileDownload.models.Notice
 import com.biometric.pdfviewer.fileDownload.utils.MyDateUtils
+import com.biometric.pdfviewer.viewFilterOption.components2.TwoField
 import org.burnoutcrew.reorderable.ItemPosition
 import java.util.*
 
@@ -147,41 +149,5 @@ class NotificationsViewModel() : ViewModel() {
         return (filterCriterion.viewReadItems || filterCriterion.onlyStarredItem || filterCriterion.startAt != null || filterCriterion.endDate != null)
     }
 
-    val listOfElementObserver = MutableLiveData<MutableList<TwoField>>()
 
-
-    fun BuildItems(){
-
-        val listOfElement = mutableListOf<TwoField>()
-
-        (0 ..5).forEach {
-          listOfElement.add(TwoField(it, "Item$it"))
-        }
-
-        listOfElementObserver.value = listOfElement
-    }
-
-    fun onTaskReordered(elmntValue:MutableList<TwoField>, fromPos:ItemPosition, toPos:ItemPosition){
-
-        val listOfElement = elmntValue
-
-
-            val toPostElmnt =  listOfElement[toPos.index]
-            val fromPostElmnt =  listOfElement[fromPos.index]
-
-            listOfElement[fromPos.index] = toPostElmnt
-            listOfElement[toPos.index] = fromPostElmnt
-
-
-        listOfElementObserver.value = listOfElement
-
-    }
-
-}
-
-data class TwoField(
-    var index:Int,
-    var value:String
-){
-    constructor():this(0, "")
 }
