@@ -22,9 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.biometric.pdfviewer.entities.ChoiceModel
@@ -52,7 +50,7 @@ fun DropDownSection(
 
     ) {
 
-        var otherReasons by remember {
+        var selectedElement by remember {
             mutableStateOf("")
         }
 
@@ -60,15 +58,15 @@ fun DropDownSection(
             elements = suggestions,
             modifier = Modifier.padding(vertical = 18.dp),
             onItemTextSelected = {
-                otherReasons = it
-                onElementSelected(otherReasons)
+                selectedElement = it
+                onElementSelected(selectedElement)
             }
         )
 
 
         AnimatedVisibility(
-            visible = otherReasons.equals(
-                suggestions.last(),
+            visible = selectedElement.equals(
+                OTHER,
                 ignoreCase = true
             )
         ) {

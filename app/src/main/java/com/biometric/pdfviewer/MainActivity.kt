@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,6 +19,7 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -36,11 +38,13 @@ import com.biometric.pdfviewer.fileDownload.models.ImageFileFromCamera
 import com.biometric.pdfviewer.ui.theme.PdfViewerTheme
 import com.biometric.pdfviewer.viewFilterOption.NotificationsViewModel
 import com.biometric.pdfviewer.viewFilterOption.components2.*
+import dagger.hilt.android.AndroidEntryPoint
 
 
 //Difference beetwen tow date
 //https://stackoverflow.com/questions/10690370/how-do-i-get-difference-between-two-dates-in-android-tried-every-thing-and-pos
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     val chexboxChoiceModel = ChoiceModel(
@@ -60,84 +64,28 @@ class MainActivity : ComponentActivity() {
         isRequired = true,
     )
 
+    private val viewModel by viewModels<FacilityViewModel>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val choiceData = List(10) { TwoField("$it", it) }.toMutableStateList()
+        //val facilityEntity = viewModel.createFacilityEntity()
+        //viewModel.insertFacility(facilityEntity)    val facilityEntity = viewModel.createFacilityEntity()
+        val facilityEntity = viewModel.randomFacilities(4)
 
-        val checkBoxSelectedValues = mutableListOf<String>()
+        viewModel.insertFacilities(facilityEntity)
+        viewModel.getFacilities()
+
         setContent {
-            val viewModel: NotificationsViewModel = viewModel()
 
             PdfViewerTheme {
 
-                /* CheckboxBlocComponent(
-                     choiceObject = chexboxChoiceModel,
-                     onItemsSelected = { selectedValue ->
-                         println("Selected: $selectedValue")
-                         checkBoxSelectedValues.add(selectedValue)
-                         println("*******Selection: $checkBoxSelectedValues")
-                     },
-                     onItemsUnSelected = { unSelectedValue ->
-                         println("unSelectedValue: $unSelectedValue")
+                val result by viewModel.facilitiesData.observeAsState(listOf())
+                ReorderableList(result.map { it.facilityId })
 
-                         checkBoxSelectedValues.remove(unSelectedValue)
-                         println("*******Selection: $checkBoxSelectedValues")
-                     }
-                 )
-                 */
+                viewModel.deleteFacilityById("2876147c-c658-47b4-9484-24e516cb8c4f")
 
-                /*
-                val radioGroupChoiceModel = ChoiceModel(
-                    name = "Question0",
-                    type = "Checbox",
-                    title = "Question9 - checbox",
-                    choices = listOf(
-                        "First element",
-                        "Second Element",
-                        "Third element",
-                        "Four element",
-                        " Five element",
-                        "Six element"
-                    ),
-                    hasNone = true,
-                    hasOther = true,
-                    isRequired = true,
-                )
-
-                var selectedRadioItem by remember {
-                    mutableStateOf("")
-                }
-
-                RadioGroupSection(radioGroupChoiceModel, onOptionItemSelected = {
-                    selectedRadioItem = it
-                    println("*******Selection: $selectedRadioItem")
-                })
-
-*/
-
-
-                /*  var selectedElement by remember { mutableStateOf("") }
-
-                  DropDownSection(
-                      choiceObject = radioGroupChoiceModel, onElementSelected = {
-                          selectedElement = it
-                          println("*******Selection: $selectedElement")
-
-                      })
-
-                 */
-
-                //ShowRanking(viewModel = viewModel)
-                //ReorderableList()
-
-                RateComponent(choiceData = List(10) { it }.toList(),
-                    choiceObject = chexboxChoiceModel,
-                    onItemSelected = {
-                        println("Item Selected: $it")
-                    })
             }
         }
 

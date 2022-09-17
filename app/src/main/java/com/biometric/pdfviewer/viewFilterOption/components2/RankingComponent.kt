@@ -18,11 +18,11 @@ import com.biometric.pdfviewer.R
 import org.burnoutcrew.reorderable.*
 
 @Composable
-fun ReorderableList(){
+fun ReorderableList(dataTmp:List<String>){
     val state = rememberReorderState()
 
     //On génère les donnée à traiter, la liste contenant les données doit être mutable
-    val data = List(10) { "item $it" }.toMutableStateList()
+    val data =dataTmp.toMutableStateList()
 
 
     var isElementDragger by remember {
