@@ -22,7 +22,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideCharacterDao(db: AppDatabase) = db.facilityDao()
+    fun provideFcailityDao(db: AppDatabase) = db.facilityDao()
 
     @Singleton
     @Provides
