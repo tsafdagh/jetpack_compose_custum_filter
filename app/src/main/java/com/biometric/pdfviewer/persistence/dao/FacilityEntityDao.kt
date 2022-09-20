@@ -15,7 +15,7 @@ interface FacilityEntityDao {
     fun getAllEntities() : Flow<List<FacilityEntity>>
 
     @Query("SELECT * FROM FacilityEntities WHERE facilityId = :id")
-    fun getEntity(id: String): FacilityEntity
+    fun getEntity(id: String): FacilityEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(facilities: List<FacilityEntity>)

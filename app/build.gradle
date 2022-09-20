@@ -116,4 +116,24 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+
+    //NEW FOR THE TESTING
+
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+
+    testImplementation "androidx.room:room-testing:2.4.3"
+    androidTestImplementation "com.google.truth:truth:1.1.2"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation "androidx.test:rules:1.4.0"
+
+    androidTestImplementation "androidx.test:runner:1.4.0"
+    testImplementation "org.robolectric:robolectric:4.5.1"
+    testImplementation "com.google.truth:truth:1.1.2"
+    androidTestImplementation "androidx.test:core-ktx:1.4.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2"
+
+    androidTestImplementation 'app.cash.turbine:turbine:0.9.0'
+
+
 }

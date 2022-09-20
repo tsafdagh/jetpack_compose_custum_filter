@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IFacilityRepository {
     fun getFacilities(): Flow<List<FacilityEntity>>
-    fun getFacilityById(id: String): FacilityEntity
+    fun getFacilityById(id: String): FacilityEntity?
 
     suspend fun saveFacilities(facilities: List<FacilityEntity>)
 

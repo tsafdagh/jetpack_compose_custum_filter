@@ -57,6 +57,7 @@ class FacilityViewModel @Inject constructor(private val repository: IFacilityRep
     }
 
 
+    //pour mock les données de test
     fun randomFacilities(number:Int):List<FacilityEntity>{
         val facilities = mutableListOf<FacilityEntity>()
         (0..number).forEach {
@@ -66,6 +67,8 @@ class FacilityViewModel @Inject constructor(private val repository: IFacilityRep
         return facilities.toList()
     }
 
+
+    //Pour Mock les données de test
    fun createFacilityEntity(): FacilityEntity {
 
         return FacilityEntity(

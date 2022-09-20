@@ -12,7 +12,7 @@ class FacilityRepositoryImpl @Inject constructor(
         return service.getAllEntities()
     }
 
-    override fun getFacilityById(id: String): FacilityEntity {
+    override fun getFacilityById(id: String): FacilityEntity? {
         return service.getEntity(id)
     }
 
