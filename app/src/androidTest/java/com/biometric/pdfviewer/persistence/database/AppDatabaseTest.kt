@@ -1,73 +1,96 @@
 package com.biometric.pdfviewer.persistence.database
 
 import android.content.Context
-import com.biometric.pdfviewer.persistence.FacilityEntity
-import com.biometric.pdfviewer.persistence.dao.FacilityEntityDao
-
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.common.truth.Truth.assertThat
-import junit.framework.TestCase
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import androidx.test.filters.SmallTest
+import app.cash.turbine.test
+import com.biometric.pdfviewer.persistence.FacilityEntity
+import com.biometric.pdfviewer.persistence.dao.FacilityEntityDao
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+
 import org.junit.*
 import org.junit.runner.RunWith
 import java.util.*
 
+//https://blog.devgenius.io/testing-room-database-with-coroutines-and-flows-testing-fundamentals-iii-5f6c3b9e4c94
 
-@RunWith(AndroidJUnit4::class) // Annotate with @RunWith
-class AppDatabaseTest : TestCase() {
-    // get reference to the LanguageDatabase and LanguageDao atabase and Dao class
-    private lateinit var db: AppDatabase
-    private lateinit var dao: FacilityEntityDao
+@OptIn(ExperimentalCoroutinesApi::class)
+@RunWith(AndroidJUnit4::class)
+@SmallTest
+class ItemDaoTest {
 
-    // Override function setUp() and annotate it with @Before
-    // this function will be called at first when this test class is called
+    @get: Rule
+    val dispatcherRule = TestDispatcherRule()
+
+    private lateinit var itemDao: FacilityEntityDao
+    private lateinit var itemDb: AppDatabase
+
     @Before
-    public override fun setUp() {
-        // get context -- since this is an instrumental test it requires
-        // context from the running application
+    fun create() {
         val context = ApplicationProvider.getApplicationContext<Context>()
-        // initialize the db and dao variable
-        db = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-        dao = db.facilityDao()
+
+        itemDb = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .build()
+
+        itemDao = itemDb.facilityDao()
     }
 
-    // Override function closeDb() and annotate it with @After
-    // this function will be called at last when this test class is called
     @After
-    fun closeDb() {
-        db.close()
+    fun cleanup() {
+        itemDb.close()
     }
 
-    // create a test function and annotate it with @Test
-    // here we are first adding an item to the db and then checking if that item
-    // is present in the db -- if the item is present then our test cases pass
     @Test
-    fun insertAndReadData(): Unit = runBlocking {
+    fun addItem_shouldReturn_theItem_inFlow() = runTest {
+        val item1 = FacilityEntity(facilityId="1", facilityName="name1", hiringOrgId=UUID.randomUUID().toString(), hiringOrgLogo="", hiringOrgName="", isCompliant=false)
+        val item2 =FacilityEntity(facilityId="2", facilityName="name2", hiringOrgId=UUID.randomUUID().toString(), hiringOrgLogo="", hiringOrgName="", isCompliant=false)
 
-        val entity = FacilityEntity(
-            facilityId = UUID.randomUUID().toString(),
-            facilityName = "facility1",
-            hiringOrgId = UUID.randomUUID().toString(),
-            hiringOrgLogo = "Hiring logo",
-            hiringOrgName = "Hiring name",
-            isCompliant = false
-        )
-        dao.insert(entity)
+        itemDao.insert(item1)
+        itemDao.insert(item2)
 
-
-
-
-        val entities = async {
-            dao.getAllEntities()
+        itemDao.getAllEntities().test {
+            val list = awaitItem()
+            assert(list.contains(item1))
+            assert(list.contains(item2))
+            cancel()
         }
+    }
 
-        println("\n entities" +
-                "$entities")
-       // assertThat(entities.await().contains(entity)).isTrue()
+    @Test
+    fun deletedItem_shouldNot_be_present_inFlow() = runTest {
+        val item1 = FacilityEntity(facilityId="1", facilityName="name1", hiringOrgId=UUID.randomUUID().toString(), hiringOrgLogo="", hiringOrgName="", isCompliant=false)
+        val item2 =FacilityEntity(facilityId="2", facilityName="name2", hiringOrgId=UUID.randomUUID().toString(), hiringOrgLogo="", hiringOrgName="", isCompliant=false)
+
+        itemDao.insert(item1)
+        itemDao.insert(item2)
+        itemDao.deleteById(item2.facilityId)
+        itemDao.getAllEntities().test {
+            val list = awaitItem()
+            assert(list.size == 1)
+            assert(list.contains(item1))
+            cancel()
+        }
+    }
+
+
+    @Test
+    fun updateItem_shouldReturn_theItem_inFlow() = runTest {
+        val item1 = FacilityEntity(facilityId="1", facilityName="name1", hiringOrgId=UUID.randomUUID().toString(), hiringOrgLogo="", hiringOrgName="", isCompliant=false)
+        val item2 =FacilityEntity(facilityId="2", facilityName="name2", hiringOrgId=UUID.randomUUID().toString(), hiringOrgLogo="", hiringOrgName="", isCompliant=false)
+
+        val item3 = FacilityEntity(facilityId="2", facilityName="name2", hiringOrgId=UUID.randomUUID().toString(), hiringOrgLogo="", hiringOrgName="", isCompliant=false)
+
+        itemDao.insert(item1)
+        itemDao.insert(item2)
+        itemDao.insertReplace(item3)
+        itemDao.getAllEntities().test {
+            val list = awaitItem()
+            assert(list.size == 2)
+            assert(list.contains(item3))
+            cancel()
+        }
     }
 }
